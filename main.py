@@ -139,6 +139,12 @@ st.set_page_config(page_title="Judiciary GPT", layout="wide")
 st.markdown(
     """
     <style>
+    /* Remove top padding so page starts right below navbar */
+    .block-container {
+        padding-top: 1rem !important;
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+    }
     body {
         background-color: #0e1117;
         color: white;
@@ -163,64 +169,17 @@ st.markdown(
         color: white;
         max-width: 70%;
     }
-    /* Chatbox row */
-    .chatbox-container {
-        background: #0e1117;
-        padding: 10px 0;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        margin-bottom: 15px;
-        position: sticky;
-        top: 3rem; /* keeps it under navbar */
-        z-index: 100;
-    }
-    .chatbox-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    .chatbox-textarea {
-        flex: 1;
-        height: 70px;
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid rgba(255,255,255,0.2);
-        background: rgba(255,255,255,0.05);
-        color: white;
-        resize: none;
-        font-size: 14px;
-    }
-    .btn {
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: 0.2s;
-        font-size: 15px;
-        font-weight: bold;
-    }
-    .btn-plus {
-        background: rgba(255,255,255,0.1);
-        color: white;
-        padding: 12px;
-        width: 50px;
-    }
-    .btn-plus:hover {
-        background: rgba(255,255,255,0.2);
-    }
-    .btn-send {
-        background: rgba(59,130,246,0.9);
-        color: white;
-        padding: 12px 20px;
-        flex: 0 0 90px;
-    }
-    .btn-send:hover {
-        background: rgba(59,130,246,1);
-    }
+    /* Buttons */
     .btn-signout {
         background: rgba(255,255,255,0.1);
         color: white;
         padding: 8px 14px;
         font-size: 13px;
         width: 100%;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.2s;
     }
     .btn-signout:hover {
         background: rgba(255,255,255,0.2);
@@ -245,12 +204,6 @@ if "chats" not in st.session_state:
     ]
 if "current_chat" not in st.session_state:
     st.session_state.current_chat = "1"
-if "attached_files" not in st.session_state:
-    st.session_state.attached_files = []
-if "is_web_search" not in st.session_state:
-    st.session_state.is_web_search = False
-if "show_add_options" not in st.session_state:
-    st.session_state.show_add_options = False
 if "chat_search" not in st.session_state:
     st.session_state.chat_search = ""
 
@@ -277,27 +230,12 @@ with st.sidebar:
             st.session_state.current_chat = chat["id"]
 
 
-# ================= Chatbox at Top =================
-st.markdown(
-    """
-    <div class="chatbox-container">
-        <div class="chatbox-row">
-            <button class="btn btn-plus">➕</button>
-            <textarea class="chatbox-textarea" placeholder="✍️ Message Judiciary GPT..."></textarea>
-            <button class="btn btn-send">📨 Send</button>
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
-
-# ================= Main (Messages below chatbox) =================
+# ================= Main =================
 col_header, col_signout = st.columns([8, 1])
 with col_header:
     st.markdown("## ⚖️ Judiciary GPT")
 with col_signout:
-    st.markdown('<button class="btn btn-signout">🚪 Sign Out</button>', unsafe_allow_html=True)
+    st.markdown('<button class="btn-signout">🚪 Sign Out</button>', unsafe_allow_html=True)
 
 st.divider()
 
