@@ -148,89 +148,88 @@ st.markdown("<hr style='border:1px solid rgba(255,255,255,0.1);'>", unsafe_allow
 
 
 # ================= Bottom Chatbox =================
-with st.container():
-    # File previews
-    if st.session_state.attached_files:
-        st.markdown("**📎 Attached Files:**")
-        for f in st.session_state.attached_files:
-            st.markdown(
-                f"""
-                <div style="display:flex; align-items:center; gap:8px; margin:4px 0; 
-                            padding:6px; border:1px solid rgba(255,255,255,0.2); border-radius:8px;">
-                    📄 <span>{f.name}</span>
-                    <span style="font-size:10px; color:gray;">({round(f.size/1024,1)} KB)</span>
-                    <button style="margin-left:auto; background:red; color:white; border:none;
-                                   border-radius:4px; padding:2px 6px; font-size:10px; cursor:pointer;">
-                        ❌
-                    </button>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+st.markdown("### ")  # spacer
 
-    # Input row with proper spacing
-    chat_col1, chat_col2, chat_col3 = st.columns([0.1, 6, 0.4], vertical_alignment="center")
-
-    with chat_col1:
+# File previews
+if st.session_state.attached_files:
+    st.markdown("**📎 Attached Files:**")
+    for f in st.session_state.attached_files:
         st.markdown(
-            """
-            <button style="
-                background-color:rgba(255,255,255,0.1);
-                color:white;
-                border:none;
-                padding:10px;
-                border-radius:8px;
-                cursor:pointer;
-                font-size:18px;
-                width:100%;
-            "
-            onmouseover="this.style.backgroundColor='rgba(255,255,255,0.2)'"
-            onmouseout="this.style.backgroundColor='rgba(255,255,255,0.1)'">
-                ➕
-            </button>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    with chat_col2:
-        st.text_area(
-            "Message box",
-            key="input_message",
-            placeholder="✍️ Message Judiciary GPT...",
-            label_visibility="collapsed",
-            height=70,  # bigger chatbox
-        )
-
-    with chat_col3:
-        st.markdown(
-            """
-            <div style="display:flex; justify-content:center; align-items:center; height:100%;">
-                <button style="
-                    background-color:rgba(59,130,246,0.9);
-                    color:white;
-                    border:none;
-                    padding:12px 20px;
-                    border-radius:8px;
-                    cursor:pointer;
-                    font-size:15px;
-                    font-weight:bold;
-                    transition:0.2s;
-                    width:100%;
-                "
-                onmouseover="this.style.backgroundColor='rgba(59,130,246,1)'"
-                onmouseout="this.style.backgroundColor='rgba(59,130,246,0.9)'">
-                    📨 Send
+            f"""
+            <div style="display:flex; align-items:center; gap:8px; margin:4px 0; 
+                        padding:6px; border:1px solid rgba(255,255,255,0.2); border-radius:8px;">
+                📄 <span>{f.name}</span>
+                <span style="font-size:10px; color:gray;">({round(f.size/1024,1)} KB)</span>
+                <button style="margin-left:auto; background:red; color:white; border:none;
+                               border-radius:4px; padding:2px 6px; font-size:10px; cursor:pointer;">
+                    ❌
                 </button>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-    # Dropdown options
-    if st.session_state.show_add_options:
-        st.markdown("---")
-        uploaded = st.file_uploader("📄 Attach File", type=["pdf", "docx", "txt", "png", "jpg"])
-        if uploaded:
-            st.session_state.attached_files.append(uploaded)
+# Proper flexbox row (no overlap)
+st.markdown(
+    """
+    <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+        <!-- Plus Button -->
+        <button style="
+            background-color:rgba(255,255,255,0.1);
+            color:white;
+            border:none;
+            padding:12px;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:18px;
+            flex:0 0 50px;
+        "
+        onmouseover="this.style.backgroundColor='rgba(255,255,255,0.2)'"
+        onmouseout="this.style.backgroundColor='rgba(255,255,255,0.1)'">
+            ➕
+        </button>
 
-        st.checkbox("🌐 Enable Web Search", key="is_web_search")
+        <!-- Chatbox -->
+        <textarea placeholder="✍️ Message Judiciary GPT..." 
+            style="
+                flex:1;
+                height:70px;
+                padding:10px;
+                border-radius:8px;
+                border:1px solid rgba(255,255,255,0.2);
+                background:rgba(255,255,255,0.05);
+                color:white;
+                resize:none;
+                font-size:14px;
+            "></textarea>
+
+        <!-- Send Button -->
+        <button style="
+            background-color:rgba(59,130,246,0.9);
+            color:white;
+            border:none;
+            padding:12px 20px;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:15px;
+            font-weight:bold;
+            flex:0 0 90px;
+            transition:0.2s;
+        "
+        onmouseover="this.style.backgroundColor='rgba(59,130,246,1)'"
+        onmouseout="this.style.backgroundColor='rgba(59,130,246,0.9)'">
+            📨 Send
+        </button>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+# Dropdown options
+if st.session_state.show_add_options:
+    st.markdown("---")
+    uploaded = st.file_uploader("📄 Attach File", type=["pdf", "docx", "txt", "png", "jpg"])
+    if uploaded:
+        st.session_state.attached_files.append(uploaded)
+
+    st.checkbox("🌐 Enable Web Search", key="is_web_search")
