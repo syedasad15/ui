@@ -8,14 +8,19 @@ st.set_page_config(page_title="Judiciary GPT", layout="wide")
 st.markdown(
     """
     <style>
-    /* Force app to align content to the top */
+    /* Hide Streamlit default header & footer */
+    header {visibility: hidden;}
+    footer {visibility: hidden;}
+
+    /* Move content down so it doesn’t overlap */
     .block-container {
-        padding-top: 1rem;
+        padding-top: 2rem !important;
         padding-bottom: 1rem;
         max-width: 1000px;
         margin: 0 auto;
     }
-    /* Chat area scrollable */
+
+    /* Chat area scrollable from top */
     .chat-area {
         display: flex;
         flex-direction: column;
@@ -109,7 +114,7 @@ with col_signout:
 
 st.markdown("<hr style='border:1px solid rgba(255,255,255,0.1); margin:10px 0;'>", unsafe_allow_html=True)
 
-# Chat messages (stick to top)
+# Chat messages (stick to top, no overlap)
 st.markdown('<div class="chat-area">', unsafe_allow_html=True)
 current_chat = get_current_chat()
 if current_chat and current_chat["messages"]:
@@ -160,7 +165,7 @@ else:
         "</div>",
         unsafe_allow_html=True,
     )
-st.markdown("</div>", unsafe_allow_html=True)  # close chat-area
+st.markdown("</div>", unsafe_allow_html=True)
 
 st.markdown("<hr style='border:1px solid rgba(255,255,255,0.1); margin:10px 0;'>", unsafe_allow_html=True)
 
