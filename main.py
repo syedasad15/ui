@@ -140,9 +140,13 @@ st.set_page_config(page_title="Judiciary GPT", layout="wide")
 st.markdown(
     """
     <style>
-    /* Only adjust top padding so title appears right below navbar */
+    /* Make page start right under navbar */
     .block-container {
         padding-top: 1rem !important;
+    }
+    body {
+        background-color: #0e1117;
+        color: white;
     }
     /* Chat bubbles */
     .user-msg {
@@ -164,18 +168,42 @@ st.markdown(
         color: white;
         max-width: 70%;
     }
+    /* Buttons */
     .btn-signout {
         background: rgba(255,255,255,0.1);
         color: white;
         padding: 8px 14px;
         font-size: 13px;
-        width: 100%;
         border: none;
         border-radius: 8px;
         cursor: pointer;
         transition: 0.2s;
     }
     .btn-signout:hover {
+        background: rgba(255,255,255,0.2);
+    }
+    .btn-send {
+        background: rgba(59,130,246,0.9);
+        color: white;
+        padding: 10px 18px;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .btn-send:hover {
+        background: rgba(59,130,246,1);
+    }
+    .btn-plus {
+        background: rgba(255,255,255,0.1);
+        color: white;
+        padding: 10px 12px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    .btn-plus:hover {
         background: rgba(255,255,255,0.2);
     }
     </style>
@@ -200,6 +228,10 @@ if "current_chat" not in st.session_state:
     st.session_state.current_chat = "1"
 if "chat_search" not in st.session_state:
     st.session_state.chat_search = ""
+if "attached_files" not in st.session_state:
+    st.session_state.attached_files = []
+if "show_add_options" not in st.session_state:
+    st.session_state.show_add_options = False
 
 
 # ================= Sidebar =================
@@ -224,7 +256,7 @@ with st.sidebar:
             st.session_state.current_chat = chat["id"]
 
 
-# ================= Main =================
+# ================= Header =================
 col_header, col_signout = st.columns([8, 1])
 with col_header:
     st.markdown("## ⚖️ Judiciary GPT")
@@ -233,6 +265,7 @@ with col_signout:
 
 st.divider()
 
+# ================= Messages =================
 current_chat = next((c for c in st.session_state.chats if c["id"] == st.session_state.current_chat), None)
 if current_chat:
     for msg in current_chat["messages"]:
@@ -242,3 +275,24 @@ if current_chat:
             st.markdown(f"<div class='assistant-msg'>{msg['content']}</div>", unsafe_allow_html=True)
 else:
     st.info("Welcome back! Start a new conversation or select one from the sidebar.")
+
+st.divider()
+
+# ================= Chatbox =================
+chat_col1, chat_col2, chat_col3 = st.columns([0.1, 5, 0.6], vertical_alignment="center")
+
+with chat_col1:
+    st.markdown('<button class="btn-plus">➕</button>', unsafe_allow_html=True)
+
+with chat_col2:
+    st.text_area(
+        "Message box",
+        key="input_message",
+        placeholder="✍️ Message Judiciary GPT...",
+        height=70,
+        label_visibility="collapsed",
+    )
+
+with chat_col3:
+    st.markdown('<button class="btn-send">📨 Send</button>', unsafe_allow_html=True)
+
