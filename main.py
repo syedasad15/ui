@@ -128,12 +128,6 @@ if "chats" not in st.session_state:
     ]
 if "current_chat" not in st.session_state:
     st.session_state.current_chat = "1"
-if "attached_files" not in st.session_state:
-    st.session_state.attached_files = []
-if "is_web_search" not in st.session_state:
-    st.session_state.is_web_search = False
-if "show_add_options" not in st.session_state:
-    st.session_state.show_add_options = False
 
 
 # ================= Helper =================
@@ -171,6 +165,7 @@ with st.sidebar:
 
 
 # ================= Main =================
+# Title row
 st.markdown(
     """
     <div class="app-header">
@@ -182,8 +177,9 @@ st.markdown(
 )
 
 # Chat Messages
-st.markdown('<div class="chat-area">', unsafe_allow_html=True)
 current_chat = get_current_chat()
+st.markdown('<div class="chat-area">', unsafe_allow_html=True)
+
 if current_chat and current_chat["messages"]:
     for msg in current_chat["messages"]:
         if msg["sender"] == "user":
@@ -213,9 +209,10 @@ else:
         "</div>",
         unsafe_allow_html=True,
     )
-st.markdown("</div>", unsafe_allow_html=True)
 
-# ================= Bottom Chatbox =================
+st.markdown("</div>", unsafe_allow_html=True)  # close chat-area
+
+# Bottom Chatbox
 st.markdown(
     """
     <div class="chatbox">
