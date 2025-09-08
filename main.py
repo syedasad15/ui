@@ -129,7 +129,6 @@
 #         st.session_state.attached_files.append(uploaded)
 
 #     st.checkbox("🌐 Enable Web Search", key="is_web_search")
-
 import streamlit as st
 import datetime
 import uuid
@@ -164,13 +163,15 @@ st.markdown(
         color: white;
         max-width: 70%;
     }
-    /* Sticky chatbox row */
+    /* Chatbox row */
     .chatbox-container {
-        position: sticky;
-        bottom: 0;
         background: #0e1117;
         padding: 10px 0;
-        border-top: 1px solid rgba(255,255,255,0.1);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        margin-bottom: 15px;
+        position: sticky;
+        top: 3rem; /* keeps it under navbar */
+        z-index: 100;
     }
     .chatbox-row {
         display: flex;
@@ -254,11 +255,6 @@ if "chat_search" not in st.session_state:
     st.session_state.chat_search = ""
 
 
-# ================= Helper =================
-def get_current_chat():
-    return next((c for c in st.session_state.chats if c["id"] == st.session_state.current_chat), None)
-
-
 # ================= Sidebar =================
 with st.sidebar:
     st.markdown("### 👤 User Name")
@@ -281,34 +277,7 @@ with st.sidebar:
             st.session_state.current_chat = chat["id"]
 
 
-# ================= Main =================
-col_header, col_signout = st.columns([8, 1])
-with col_header:
-    st.markdown("## ⚖️ Judiciary GPT")
-with col_signout:
-    st.markdown('<button class="btn btn-signout">🚪 Sign Out</button>', unsafe_allow_html=True)
-
-st.divider()
-
-current_chat = get_current_chat()
-if current_chat:
-    for msg in current_chat["messages"]:
-        if msg["sender"] == "user":
-            st.markdown(f"<div class='user-msg'>{msg['content']}</div>", unsafe_allow_html=True)
-        else:
-            st.markdown(f"<div class='assistant-msg'>{msg['content']}</div>", unsafe_allow_html=True)
-else:
-    st.info("Welcome back! Start a new conversation or select one from the sidebar.")
-
-st.divider()
-
-
-# ================= Bottom Chatbox =================
-if st.session_state.attached_files:
-    st.markdown("**📎 Attached Files:**")
-    for f in st.session_state.attached_files:
-        st.markdown(f"- 📄 {f.name} ({round(f.size/1024,1)} KB)")
-
+# ================= Chatbox at Top =================
 st.markdown(
     """
     <div class="chatbox-container">
@@ -322,11 +291,22 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Dropdown options (only visible when toggled)
-if st.session_state.show_add_options:
-    st.divider()
-    uploaded = st.file_uploader("📄 Attach File", type=["pdf", "docx", "txt", "png", "jpg"])
-    if uploaded:
-        st.session_state.attached_files.append(uploaded)
 
-    st.checkbox("🌐 Enable Web Search", key="is_web_search")
+# ================= Main (Messages below chatbox) =================
+col_header, col_signout = st.columns([8, 1])
+with col_header:
+    st.markdown("## ⚖️ Judiciary GPT")
+with col_signout:
+    st.markdown('<button class="btn btn-signout">🚪 Sign Out</button>', unsafe_allow_html=True)
+
+st.divider()
+
+current_chat = next((c for c in st.session_state.chats if c["id"] == st.session_state.current_chat), None)
+if current_chat:
+    for msg in current_chat["messages"]:
+        if msg["sender"] == "user":
+            st.markdown(f"<div class='user-msg'>{msg['content']}</div>", unsafe_allow_html=True)
+        else:
+            st.markdown(f"<div class='assistant-msg'>{msg['content']}</div>", unsafe_allow_html=True)
+else:
+    st.info("Welcome back! Start a new conversation or select one from the sidebar.")
