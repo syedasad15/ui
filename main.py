@@ -62,7 +62,6 @@ with st.sidebar:
     filtered = [c for c in st.session_state.chats if st.session_state.chat_search.lower() in c["title"].lower()]
     for chat in filtered:
         is_selected = chat["id"] == st.session_state.current_chat
-        style = "background-color:rgba(255,255,255,0.1); color:white;" if is_selected else ""
         if st.button(f"💬 {chat['title']}", key=chat["id"], use_container_width=True):
             st.session_state.current_chat = chat["id"]
 
@@ -72,13 +71,27 @@ col_header, col_signout = st.columns([8, 1])
 with col_header:
     st.markdown("<h2 style='color:white;'>⚖️ Judiciary GPT</h2>", unsafe_allow_html=True)
 with col_signout:
-    st.button("🚪 Sign Out")
+    st.markdown(
+        """
+        <button style="
+            background-color:rgba(239,68,68,0.8);
+            color:white;
+            border:none;
+            padding:10px 18px;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:14px;
+            font-weight:500;
+        ">🚪 Sign Out</button>
+        """,
+        unsafe_allow_html=True,
+    )
 
-st.markdown("<hr style='border:1px solid rgba(255,255,255,0.1);'>", unsafe_allow_html=True)
+st.markdown("<hr style='border:1px solid rgba(255,255,255,0.1); margin:10px 0;'>", unsafe_allow_html=True)
 
-# Chat Messages
+# Chat Messages (stick to top, no center spacing)
 current_chat = get_current_chat()
-if current_chat:
+if current_chat and current_chat["messages"]:
     for msg in current_chat["messages"]:
         if msg["sender"] == "user":
             st.markdown(
@@ -86,7 +99,7 @@ if current_chat:
                 <div style="
                     text-align:right; 
                     background:rgba(59,130,246,0.2); 
-                    padding:8px 12px; 
+                    padding:10px 14px; 
                     border-radius:12px; 
                     margin:6px 0; 
                     color:white;
@@ -106,7 +119,7 @@ if current_chat:
                 <div style="
                     text-align:left; 
                     background:rgba(255,255,255,0.08); 
-                    padding:8px 12px; 
+                    padding:10px 14px; 
                     border-radius:12px; 
                     margin:6px 0; 
                     color:white;
@@ -121,13 +134,13 @@ if current_chat:
             )
 else:
     st.markdown(
-        "<div style='text-align:center; padding:40px; color:rgba(255,255,255,0.6);'>"
+        "<div style='text-align:center; padding:20px; color:rgba(255,255,255,0.6);'>"
         "Welcome back! Start a new conversation or select one from the sidebar."
         "</div>",
         unsafe_allow_html=True,
     )
 
-st.markdown("<hr style='border:1px solid rgba(255,255,255,0.1);'>", unsafe_allow_html=True)
+st.markdown("<hr style='border:1px solid rgba(255,255,255,0.1); margin:10px 0;'>", unsafe_allow_html=True)
 
 
 # ================= Bottom Chatbox =================
@@ -152,39 +165,50 @@ with st.container():
             )
 
     # Input row
-    chat_col1, chat_col2, chat_col3 = st.columns([0.1, 4, 0.25], vertical_alignment="center")
+    chat_col1, chat_col2, chat_col3 = st.columns([0.1, 4, 0.3], vertical_alignment="center")
 
     with chat_col1:
-        if st.button("➕", help="Add options", use_container_width=True):
-            st.session_state.show_add_options = not st.session_state.show_add_options
+        st.markdown(
+            """
+            <button style="
+                background-color:rgba(255,255,255,0.1);
+                color:white;
+                border:none;
+                padding:10px;
+                border-radius:8px;
+                cursor:pointer;
+                font-size:18px;
+            ">➕</button>
+            """,
+            unsafe_allow_html=True,
+        )
 
     with chat_col2:
-        st.text_input(
+        st.text_area(
             "Message box",
             key="input_message",
             placeholder="✍️ Message Judiciary GPT...",
+            height=70,  # bigger chatbox
             label_visibility="collapsed",
         )
 
     with chat_col3:
         st.markdown(
             """
-            <div style="display:flex; justify-content:flex-end; align-items:center; height:100%;">
-                <button style="
-                    background-color:rgba(59,130,246,0.9);
-                    color:white;
-                    border:none;
-                    padding:8px 14px;
-                    border-radius:8px;
-                    cursor:pointer;
-                    font-size:14px;
-                    transition:0.2s;
-                "
-                onmouseover="this.style.backgroundColor='rgba(59,130,246,1)'"
-                onmouseout="this.style.backgroundColor='rgba(59,130,246,0.9)'">
-                    📨 Send
-                </button>
-            </div>
+            <button style="
+                background-color:rgba(59,130,246,0.9);
+                color:white;
+                border:none;
+                padding:12px 22px;
+                border-radius:8px;
+                cursor:pointer;
+                font-size:15px;
+                font-weight:500;
+            "
+            onmouseover="this.style.backgroundColor='rgba(59,130,246,1)'"
+            onmouseout="this.style.backgroundColor='rgba(59,130,246,0.9)'">
+                📨 Send
+            </button>
             """,
             unsafe_allow_html=True,
         )
