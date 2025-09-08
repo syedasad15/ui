@@ -61,8 +61,6 @@ with st.sidebar:
     # Chat History
     filtered = [c for c in st.session_state.chats if st.session_state.chat_search.lower() in c["title"].lower()]
     for chat in filtered:
-        is_selected = chat["id"] == st.session_state.current_chat
-        style = "background-color:rgba(255,255,255,0.1); color:white;" if is_selected else ""
         if st.button(f"💬 {chat['title']}", key=chat["id"], use_container_width=True):
             st.session_state.current_chat = chat["id"]
 
@@ -170,8 +168,8 @@ with st.container():
                 unsafe_allow_html=True,
             )
 
-    # Input row
-    chat_col1, chat_col2, chat_col3 = st.columns([0.12, 5, 0.35], vertical_alignment="center")
+    # Input row with proper spacing
+    chat_col1, chat_col2, chat_col3 = st.columns([0.1, 6, 0.4], vertical_alignment="center")
 
     with chat_col1:
         st.markdown(
@@ -200,18 +198,18 @@ with st.container():
             key="input_message",
             placeholder="✍️ Message Judiciary GPT...",
             label_visibility="collapsed",
-            height=60,  # larger input box
+            height=70,  # bigger chatbox
         )
 
     with chat_col3:
         st.markdown(
             """
-            <div style="display:flex; justify-content:flex-end; align-items:center; height:100%;">
+            <div style="display:flex; justify-content:center; align-items:center; height:100%;">
                 <button style="
                     background-color:rgba(59,130,246,0.9);
                     color:white;
                     border:none;
-                    padding:10px 18px;
+                    padding:12px 20px;
                     border-radius:8px;
                     cursor:pointer;
                     font-size:15px;
