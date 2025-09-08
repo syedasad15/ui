@@ -17,7 +17,7 @@ st.markdown(
     }
     /* Remove default top margin so content starts right after navbar */
     .block-container {
-        padding-top: 1rem !important;
+        padding-top: 2.5rem !important;
     }
     /* Chat bubbles */
     .user-msg {
