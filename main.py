@@ -9,26 +9,105 @@ st.markdown(
     """
     <style>
     /* Hide Streamlit default header & footer */
-    header {visibility: hidden;}
-    footer {visibility: hidden;}
+    header, footer {visibility: hidden;}
 
-    /* Move content down so it doesn’t overlap */
+    /* Page container */
     .block-container {
-        padding-top: 2rem !important;
-        padding-bottom: 1rem;
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
         max-width: 1000px;
         margin: 0 auto;
     }
 
-    /* Chat area scrollable from top */
+    /* Header row */
+    .app-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .signout-btn {
+        background-color: rgba(239,68,68,0.9);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+    .signout-btn:hover {background-color: rgba(239,68,68,1);}
+
+    /* Chat area */
     .chat-area {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
         height: 65vh;
         overflow-y: auto;
-        padding-right: 8px;
+        padding: 0.5rem;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 12px;
+        background: rgba(255,255,255,0.02);
     }
+
+    .msg-user {
+        text-align: right;
+        background: rgba(59,130,246,0.2);
+        padding: 10px 14px;
+        border-radius: 12px;
+        margin: 6px 0;
+        color: white;
+        max-width: 70%;
+        margin-left: auto;
+    }
+
+    .msg-assistant {
+        text-align: left;
+        background: rgba(255,255,255,0.08);
+        padding: 10px 14px;
+        border-radius: 12px;
+        margin: 6px 0;
+        color: white;
+        max-width: 70%;
+    }
+
+    .msg-timestamp {
+        font-size: 10px;
+        color: gray;
+        margin-top: 4px;
+    }
+
+    /* Bottom input bar */
+    .chatbox {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.8rem;
+    }
+
+    .plus-btn {
+        background: rgba(255,255,255,0.1);
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    .send-btn {
+        background: rgba(59,130,246,0.9);
+        color: white;
+        border: none;
+        padding: 12px 22px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 500;
+    }
+    .send-btn:hover {background: rgba(59,130,246,1);}
     </style>
     """,
     unsafe_allow_html=True,
@@ -92,29 +171,17 @@ with st.sidebar:
 
 
 # ================= Main =================
-col_header, col_signout = st.columns([8, 1])
-with col_header:
-    st.markdown("<h2 style='color:white;'>⚖️ Judiciary GPT</h2>", unsafe_allow_html=True)
-with col_signout:
-    st.markdown(
-        """
-        <button style="
-            background-color:rgba(239,68,68,0.8);
-            color:white;
-            border:none;
-            padding:10px 18px;
-            border-radius:8px;
-            cursor:pointer;
-            font-size:14px;
-            font-weight:500;
-        ">🚪 Sign Out</button>
-        """,
-        unsafe_allow_html=True,
-    )
+st.markdown(
+    """
+    <div class="app-header">
+        <h2 style="margin:0; color:white;">⚖️ Judiciary GPT</h2>
+        <button class="signout-btn">🚪 Sign Out</button>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
-st.markdown("<hr style='border:1px solid rgba(255,255,255,0.1); margin:10px 0;'>", unsafe_allow_html=True)
-
-# Chat messages (stick to top, no overlap)
+# Chat Messages
 st.markdown('<div class="chat-area">', unsafe_allow_html=True)
 current_chat = get_current_chat()
 if current_chat and current_chat["messages"]:
@@ -122,19 +189,9 @@ if current_chat and current_chat["messages"]:
         if msg["sender"] == "user":
             st.markdown(
                 f"""
-                <div style="
-                    text-align:right; 
-                    background:rgba(59,130,246,0.2); 
-                    padding:10px 14px; 
-                    border-radius:12px; 
-                    margin:6px 0; 
-                    color:white;
-                    max-width:70%;
-                    margin-left:auto;">
+                <div class="msg-user">
                     {msg["content"]}
-                    <div style="font-size:10px; color:gray; margin-top:4px;">
-                        {msg["timestamp"].strftime('%H:%M')}
-                    </div>
+                    <div class="msg-timestamp">{msg["timestamp"].strftime('%H:%M')}</div>
                 </div>
                 """,
                 unsafe_allow_html=True,
@@ -142,18 +199,9 @@ if current_chat and current_chat["messages"]:
         else:
             st.markdown(
                 f"""
-                <div style="
-                    text-align:left; 
-                    background:rgba(255,255,255,0.08); 
-                    padding:10px 14px; 
-                    border-radius:12px; 
-                    margin:6px 0; 
-                    color:white;
-                    max-width:70%;">
+                <div class="msg-assistant">
                     {msg["content"]}
-                    <div style="font-size:10px; color:gray; margin-top:4px;">
-                        {msg["timestamp"].strftime('%H:%M')}
-                    </div>
+                    <div class="msg-timestamp">{msg["timestamp"].strftime('%H:%M')}</div>
                 </div>
                 """,
                 unsafe_allow_html=True,
@@ -167,81 +215,23 @@ else:
     )
 st.markdown("</div>", unsafe_allow_html=True)
 
-st.markdown("<hr style='border:1px solid rgba(255,255,255,0.1); margin:10px 0;'>", unsafe_allow_html=True)
-
-
 # ================= Bottom Chatbox =================
-with st.container():
-    if st.session_state.attached_files:
-        st.markdown("**📎 Attached Files:**")
-        for f in st.session_state.attached_files:
-            st.markdown(
-                f"""
-                <div style="display:flex; align-items:center; gap:8px; margin:4px 0; 
-                            padding:6px; border:1px solid rgba(255,255,255,0.2); border-radius:8px;">
-                    📄 <span>{f.name}</span>
-                    <span style="font-size:10px; color:gray;">({round(f.size/1024,1)} KB)</span>
-                    <button style="margin-left:auto; background:red; color:white; border:none;
-                                   border-radius:4px; padding:2px 6px; font-size:10px; cursor:pointer;">
-                        ❌
-                    </button>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-
-    chat_col1, chat_col2, chat_col3 = st.columns([0.1, 4, 0.3], vertical_alignment="center")
-
-    with chat_col1:
-        st.markdown(
-            """
-            <button style="
-                background-color:rgba(255,255,255,0.1);
-                color:white;
-                border:none;
-                padding:10px;
-                border-radius:8px;
-                cursor:pointer;
-                font-size:18px;
-            ">➕</button>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    with chat_col2:
-        st.text_area(
-            "Message box",
-            key="input_message",
-            placeholder="✍️ Message Judiciary GPT...",
-            height=70,
-            label_visibility="collapsed",
-        )
-
-    with chat_col3:
-        st.markdown(
-            """
-            <button style="
-                background-color:rgba(59,130,246,0.9);
-                color:white;
-                border:none;
-                padding:12px 22px;
-                border-radius:8px;
-                cursor:pointer;
-                font-size:15px;
-                font-weight:500;
-                width:100%;
-            "
-            onmouseover="this.style.backgroundColor='rgba(59,130,246,1)'"
-            onmouseout="this.style.backgroundColor='rgba(59,130,246,0.9)'">
-                📨 Send
-            </button>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    if st.session_state.show_add_options:
-        st.markdown("---")
-        uploaded = st.file_uploader("📄 Attach File", type=["pdf", "docx", "txt", "png", "jpg"])
-        if uploaded:
-            st.session_state.attached_files.append(uploaded)
-        st.checkbox("🌐 Enable Web Search", key="is_web_search")
+st.markdown(
+    """
+    <div class="chatbox">
+        <button class="plus-btn">➕</button>
+        <textarea placeholder="✍️ Message Judiciary GPT..." rows="3" style="
+            flex-grow:1;
+            border-radius:8px;
+            border:1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            color:white;
+            padding:10px;
+            font-size:14px;
+            resize:none;
+        "></textarea>
+        <button class="send-btn">📨 Send</button>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
