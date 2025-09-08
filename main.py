@@ -1,6 +1,9 @@
 import streamlit as st
 import datetime
 import uuid
+import streamlit as st
+import datetime
+import uuid
 
 st.set_page_config(page_title="Judiciary GPT", layout="wide")
 
@@ -11,6 +14,10 @@ st.markdown(
     body {
         background-color: #0e1117;
         color: white;
+    }
+    /* Remove default top margin so content starts right after navbar */
+    .block-container {
+        padding-top: 1rem !important;
     }
     /* Chat bubbles */
     .user-msg {
@@ -96,6 +103,7 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
 
 # ================= Session State =================
 if "chats" not in st.session_state:
