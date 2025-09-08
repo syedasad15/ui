@@ -4,6 +4,31 @@ import uuid
 
 st.set_page_config(page_title="Judiciary GPT", layout="wide")
 
+# ================= Custom CSS =================
+st.markdown(
+    """
+    <style>
+    /* Force app to align content to the top */
+    .block-container {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    /* Chat area scrollable */
+    .chat-area {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        height: 65vh;
+        overflow-y: auto;
+        padding-right: 8px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 # ================= Session State =================
 if "chats" not in st.session_state:
     st.session_state.chats = [
@@ -34,7 +59,6 @@ def get_current_chat():
 
 # ================= Sidebar =================
 with st.sidebar:
-    # User Info
     st.markdown(
         """
         <div style="padding:12px; border-bottom:1px solid rgba(255,255,255,0.1);">
@@ -44,7 +68,6 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-    # New Chat Button
     if st.button("➕  New Chat", use_container_width=True):
         cid = str(uuid.uuid4())
         st.session_state.chats.insert(0, {
@@ -55,13 +78,10 @@ with st.sidebar:
         })
         st.session_state.current_chat = cid
 
-    # Search
     st.text_input("🔍 Search chats", key="chat_search", placeholder="Search chats...")
 
-    # Chat History
     filtered = [c for c in st.session_state.chats if st.session_state.chat_search.lower() in c["title"].lower()]
     for chat in filtered:
-        is_selected = chat["id"] == st.session_state.current_chat
         if st.button(f"💬 {chat['title']}", key=chat["id"], use_container_width=True):
             st.session_state.current_chat = chat["id"]
 
@@ -89,7 +109,8 @@ with col_signout:
 
 st.markdown("<hr style='border:1px solid rgba(255,255,255,0.1); margin:10px 0;'>", unsafe_allow_html=True)
 
-# Chat Messages (stick to top, no center spacing)
+# Chat messages (stick to top)
+st.markdown('<div class="chat-area">', unsafe_allow_html=True)
 current_chat = get_current_chat()
 if current_chat and current_chat["messages"]:
     for msg in current_chat["messages"]:
@@ -139,13 +160,13 @@ else:
         "</div>",
         unsafe_allow_html=True,
     )
+st.markdown("</div>", unsafe_allow_html=True)  # close chat-area
 
 st.markdown("<hr style='border:1px solid rgba(255,255,255,0.1); margin:10px 0;'>", unsafe_allow_html=True)
 
 
 # ================= Bottom Chatbox =================
 with st.container():
-    # File previews
     if st.session_state.attached_files:
         st.markdown("**📎 Attached Files:**")
         for f in st.session_state.attached_files:
@@ -164,7 +185,6 @@ with st.container():
                 unsafe_allow_html=True,
             )
 
-    # Input row
     chat_col1, chat_col2, chat_col3 = st.columns([0.1, 4, 0.3], vertical_alignment="center")
 
     with chat_col1:
@@ -188,7 +208,7 @@ with st.container():
             "Message box",
             key="input_message",
             placeholder="✍️ Message Judiciary GPT...",
-            height=70,  # bigger chatbox
+            height=70,
             label_visibility="collapsed",
         )
 
@@ -204,6 +224,7 @@ with st.container():
                 cursor:pointer;
                 font-size:15px;
                 font-weight:500;
+                width:100%;
             "
             onmouseover="this.style.backgroundColor='rgba(59,130,246,1)'"
             onmouseout="this.style.backgroundColor='rgba(59,130,246,0.9)'">
@@ -213,11 +234,9 @@ with st.container():
             unsafe_allow_html=True,
         )
 
-    # Dropdown options
     if st.session_state.show_add_options:
         st.markdown("---")
         uploaded = st.file_uploader("📄 Attach File", type=["pdf", "docx", "txt", "png", "jpg"])
         if uploaded:
             st.session_state.attached_files.append(uploaded)
-
         st.checkbox("🌐 Enable Web Search", key="is_web_search")
