@@ -72,7 +72,26 @@ col_header, col_signout = st.columns([8, 1])
 with col_header:
     st.markdown("<h2 style='color:white;'>⚖️ Judiciary GPT</h2>", unsafe_allow_html=True)
 with col_signout:
-    st.button("🚪 Sign Out")
+    st.markdown(
+        """
+        <button style="
+            background-color:rgba(255,255,255,0.1);
+            color:white;
+            border:none;
+            padding:8px 14px;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:13px;
+            transition:0.2s;
+            width:100%;
+        "
+        onmouseover="this.style.backgroundColor='rgba(255,255,255,0.2)'"
+        onmouseout="this.style.backgroundColor='rgba(255,255,255,0.1)'">
+            🚪 Sign Out
+        </button>
+        """,
+        unsafe_allow_html=True,
+    )
 
 st.markdown("<hr style='border:1px solid rgba(255,255,255,0.1);'>", unsafe_allow_html=True)
 
@@ -86,7 +105,7 @@ if current_chat:
                 <div style="
                     text-align:right; 
                     background:rgba(59,130,246,0.2); 
-                    padding:8px 12px; 
+                    padding:10px 14px; 
                     border-radius:12px; 
                     margin:6px 0; 
                     color:white;
@@ -106,7 +125,7 @@ if current_chat:
                 <div style="
                     text-align:left; 
                     background:rgba(255,255,255,0.08); 
-                    padding:8px 12px; 
+                    padding:10px 14px; 
                     border-radius:12px; 
                     margin:6px 0; 
                     color:white;
@@ -152,18 +171,36 @@ with st.container():
             )
 
     # Input row
-    chat_col1, chat_col2, chat_col3 = st.columns([0.1, 4, 0.25], vertical_alignment="center")
+    chat_col1, chat_col2, chat_col3 = st.columns([0.12, 5, 0.35], vertical_alignment="center")
 
     with chat_col1:
-        if st.button("➕", help="Add options", use_container_width=True):
-            st.session_state.show_add_options = not st.session_state.show_add_options
+        st.markdown(
+            """
+            <button style="
+                background-color:rgba(255,255,255,0.1);
+                color:white;
+                border:none;
+                padding:10px;
+                border-radius:8px;
+                cursor:pointer;
+                font-size:18px;
+                width:100%;
+            "
+            onmouseover="this.style.backgroundColor='rgba(255,255,255,0.2)'"
+            onmouseout="this.style.backgroundColor='rgba(255,255,255,0.1)'">
+                ➕
+            </button>
+            """,
+            unsafe_allow_html=True,
+        )
 
     with chat_col2:
-        st.text_input(
+        st.text_area(
             "Message box",
             key="input_message",
             placeholder="✍️ Message Judiciary GPT...",
             label_visibility="collapsed",
+            height=60,  # larger input box
         )
 
     with chat_col3:
@@ -174,11 +211,13 @@ with st.container():
                     background-color:rgba(59,130,246,0.9);
                     color:white;
                     border:none;
-                    padding:8px 14px;
+                    padding:10px 18px;
                     border-radius:8px;
                     cursor:pointer;
-                    font-size:14px;
+                    font-size:15px;
+                    font-weight:bold;
                     transition:0.2s;
+                    width:100%;
                 "
                 onmouseover="this.style.backgroundColor='rgba(59,130,246,1)'"
                 onmouseout="this.style.backgroundColor='rgba(59,130,246,0.9)'">
