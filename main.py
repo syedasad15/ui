@@ -129,6 +129,7 @@
 #         st.session_state.attached_files.append(uploaded)
 
 #     st.checkbox("🌐 Enable Web Search", key="is_web_search")
+
 import streamlit as st
 import datetime
 import uuid
@@ -139,15 +140,9 @@ st.set_page_config(page_title="Judiciary GPT", layout="wide")
 st.markdown(
     """
     <style>
-    /* Remove top padding so page starts right below navbar */
+    /* Only adjust top padding so title appears right below navbar */
     .block-container {
         padding-top: 1rem !important;
-        padding-left: 2rem !important;
-        padding-right: 2rem !important;
-    }
-    body {
-        background-color: #0e1117;
-        color: white;
     }
     /* Chat bubbles */
     .user-msg {
@@ -169,7 +164,6 @@ st.markdown(
         color: white;
         max-width: 70%;
     }
-    /* Buttons */
     .btn-signout {
         background: rgba(255,255,255,0.1);
         color: white;
